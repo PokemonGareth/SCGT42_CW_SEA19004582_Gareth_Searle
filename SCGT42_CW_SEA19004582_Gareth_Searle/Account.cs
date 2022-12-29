@@ -8,7 +8,7 @@ namespace TWW
 {
     internal class Account
     {
-        public Guid AccountNumber { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }
@@ -17,7 +17,7 @@ namespace TWW
                       string email,
                       string address)
         {
-            AccountNumber = Guid.NewGuid();
+            Id = Guid.NewGuid();
             Name = name;
             Email = email;
             Address = address;
@@ -25,7 +25,7 @@ namespace TWW
 
         public override string? ToString()
         {
-            return $"Account ID: { AccountNumber }\nDriver Name: {Name}\nEmail: { Email }\nAddress: {Address}";
+            return $"Account ID: { Id }\nDriver Name: {Name}\nEmail: { Email }\nAddress: {Address}";
         }
     }
 }
