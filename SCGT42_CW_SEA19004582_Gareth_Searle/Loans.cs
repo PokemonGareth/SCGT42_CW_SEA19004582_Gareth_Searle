@@ -28,7 +28,7 @@ namespace TWW
             {
                 double daysoverdue = Overdue.Subtract(Timestamp).TotalDays;
                 double extraexpenses = 0.25 * daysoverdue;
-                return $"Booking ID: {Id}\nProduct details: {Product}\nAccount:{Account}\nLoan Started:{Timestamp}\n!!!Days Overdue{ daysoverdue} = +{extraexpenses}p!!!";
+                return $"Booking ID: {Id}\nProduct details: {Product}\nAccount:{Account}\nLoan Started:{Timestamp}\n!!!Days Overdue{ daysoverdue} = +£{extraexpenses}!!!";
             }
             else
             {
