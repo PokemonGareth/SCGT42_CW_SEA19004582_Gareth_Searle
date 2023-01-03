@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TWW
 {
-    internal class Loans
+    internal class Loans //used to create Loans
     {
         public Guid Id { get; set; }
         public Products Product { get; set; }
@@ -24,7 +24,7 @@ namespace TWW
         public override string ToString()
         {
             DateTime Overdue = DateTime.Today;
-            if (Timestamp < Overdue)
+            if (Timestamp < Overdue)//works out how many days the loan has overrun
             {
                 double daysoverdue = Overdue.Subtract(Timestamp).TotalDays;
                 double extraexpenses = 0.25 * daysoverdue;

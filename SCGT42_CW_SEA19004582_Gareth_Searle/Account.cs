@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TWW
 {
-    internal class Account
+    internal class Account // used to create an Account
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

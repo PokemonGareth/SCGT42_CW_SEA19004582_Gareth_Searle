@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TWW
 {
-    internal class Library
+    internal class Library//creates a library to stores all the data and gather the Loans, account and products together.
     {
         public string Name { get; set; }
         public string Address { get; set; }
@@ -24,7 +24,7 @@ namespace TWW
             Products = new List<Products>();
         }
 
-        public Account? GetAccount(string name)
+        public Account? GetAccount(string name)//used when retrieing an account
         {
             foreach (var account in Accounts)
             {
@@ -37,7 +37,7 @@ namespace TWW
             return null;
 
         }
-        public Loans? GetLoan(string id)
+        public Loans? GetLoan(string id)//used when retrieing a loan
         {
             foreach (var loan in Loans)
             {
@@ -50,7 +50,7 @@ namespace TWW
             return null;
 
         }
-        public Products? GetProduct(string name)
+        public Products? GetProduct(string name)//used when retrieing a product
         {
             foreach (var product in Products)
             {

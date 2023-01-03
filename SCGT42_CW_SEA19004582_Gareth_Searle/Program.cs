@@ -8,7 +8,7 @@ namespace TWW
     {
         static void Main()
         {
-            CLI.MainMenu();
+            CLI.MainMenu();//displays the main menu from CLI.cs
         }
     }
 }
