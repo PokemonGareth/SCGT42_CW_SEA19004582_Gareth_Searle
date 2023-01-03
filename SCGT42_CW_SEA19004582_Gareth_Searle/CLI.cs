@@ -41,6 +41,8 @@ namespace TWW
             }
         }
 
+
+
         private static async void manageLoans()
         {
             Console.WriteLine($"Loans Manager");
@@ -67,9 +69,12 @@ namespace TWW
                         int h = Prompt.Input<int>("Enter hour:");
                         int m = Prompt.Input<int>("Enter mins:");
                         Loans Loan = new Loans(currentProduct, Name, new DateTime(y, M, d, h, m, 0));//creates a new loan
+
                         currentProduct.Status = false;//changes the product status
+
                         using StreamWriter loanFile = new("Loans.txt", append: true);
                         await loanFile.WriteLineAsync($"{currentProduct}, {Name}, {new DateTime(y, M, d, h, m, 0)}");//appends the loan to a loans text file
+
                         Console.WriteLine($"Loan added: \n {Loan} ");
                     }
                     else if(currentProduct.Status != true)
@@ -105,17 +110,9 @@ namespace TWW
 
                     if (edit != null)
                     {
-                        string editString = edit.ToString();
-                        var oldId = edit.Id; //stores all other data from the loan bieng edited
-                        var oldProduct = edit.Product;
+                        string editString = edit.ToString(); //converts data type to string
+                        var oldProduct = edit.Product;//stores all other data from the loan bieng edited
                         var oldAccount = edit.Account;
-
-                        int newYear = Prompt.Input<int>("Please enter new Due Year");//gathers data to update the loan
-                        int newMonth = Prompt.Input<int>("Please enter new Due Month");
-                        int newDay = Prompt.Input<int>("Please enter new Due Day");
-                        int newHour = Prompt.Input<int>("Please enter new Due Hour");
-                        int newMinute = Prompt.Input<int>("Please enter new Due Minute");
-                        Loans editedLoan = edit (oldProduct, oldAccount, new DateTime(newYear, newMonth, newDay, newHour, newMinute, 0));//modifies the time and date of the loan
 
                         var tempFile = Path.GetTempFileName();
                         var linesToKeep = File.ReadLines("Loans.txt").Where(i => i != editString);//removes loan from txt file
@@ -124,6 +121,16 @@ namespace TWW
 
                         File.Delete("Loans.txt");
                         File.Move(tempFile, "Loans.txt");
+
+                        int newYear = Prompt.Input<int>("Please enter new Due Year");//gathers data to update the loan
+                        int newMonth = Prompt.Input<int>("Please enter new Due Month");
+                        int newDay = Prompt.Input<int>("Please enter new Due Day");
+                        int newHour = Prompt.Input<int>("Please enter new Due Hour");
+                        int newMinute = Prompt.Input<int>("Please enter new Due Minute");
+                        Loans editedLoan = new Loans(oldProduct, oldAccount, new DateTime(newYear, newMonth, newDay, newHour, newMinute, 0));//modifies the time and date of the loan
+                
+                        using StreamWriter loanFile = new("Loans.txt", append: true);
+                        await loanFile.WriteLineAsync($"{oldProduct}, {oldAccount}, {new DateTime(newYear, newMonth, newDay, newHour, newMinute, 0)}");//appends the loan to a loans text file
 
                         Console.WriteLine("Details have been updated.");
                     }
@@ -145,10 +152,11 @@ namespace TWW
                     {
                         Console.WriteLine(current.ToString());//displays the chosen loan
                         string currentString = current.ToString();
+                        Console.WriteLine("------------------------------------------------------------------------");
                         var sure = Prompt.Confirm("Are you sure that you would like to delete this loan?:");//confirms the deletion
-                        if (sure = true) 
+                        if (sure == true) 
                         {
-                        current.Product.Status = true;
+                        current.Product.Status = true;//makes the product available again
 
                         var tempFile = Path.GetTempFileName();
                         var linesToKeep = File.ReadLines("Loans.txt").Where(i => i != currentString);//removes loan from txt file
@@ -178,7 +186,10 @@ namespace TWW
                     break;
             }
         }
-        private static void manageAccounts()
+
+
+
+        private static async void manageAccounts()
         {
             Console.WriteLine($"Account Manager");
             Console.WriteLine("---------------");
@@ -191,16 +202,17 @@ namespace TWW
 
                     Console.Clear();//clears console
 
-                    if (true)
-                    {
-                        string name = Prompt.Input<string>("Enter Account Name:");//gathers data to create a new account
-                        string email = Prompt.Input<string>("Enter Account Email:");
-                        string address = Prompt.Input<string>("Enter Account Address:");
-                        Account account = new Account(name, email, address);//creates new account
-                        using StreamWriter accountFile = new("Accounts.txt", append: true);
-                        await accountFile.WriteLineAsync($"{name}, {email}, {address}");//adds account details to Account.txt                                                                                                                                                                                                                               #####
-                        Console.WriteLine($"Account Creation Complete: \n {account} ");
-                    }
+
+                    string name = Prompt.Input<string>("Enter Account Name:");//gathers data to create a new account
+                    string email = Prompt.Input<string>("Enter Account Email:");
+                    string address = Prompt.Input<string>("Enter Account Address:");
+                    Account account = new Account(name, email, address);//creates new account
+
+                    StreamWriter accountFile = new StreamWriter("Accounts.txt", append: true);
+                    await accountFile.WriteLineAsync($"{name}, {email}, {address}");//adds account details to Account.txt
+
+                    Console.WriteLine($"Account Creation Complete: \n {account} ");
+
                     Console.ReadLine();
                     Console.WriteLine("Prease any key to return to main menu.");
                     MainMenu();
@@ -225,8 +237,23 @@ namespace TWW
 
                     if (current != null)
                     {
+                        Console.WriteLine(current.ToString());
+                        string? currentString = current.ToString();
+                        Console.WriteLine("------------------------------------------------------------------------");
+                        var sure = Prompt.Confirm("Are you sure that you would like to delete this Account?:");//confirms the deletion
+                        if (sure == true) 
+                        {
+                        var tempFile = Path.GetTempFileName();
+                        var linesToKeep = File.ReadLines("Accounts.txt").Where(i => i != currentString);//removes account from txt file
+
+                        File.WriteAllLines(tempFile, linesToKeep);
+
+                        File.Delete("Accounts.txt");
+                        File.Move(tempFile, "Accounts.txt");
+
                         library.Accounts.Remove(current);//removes account
                         Console.WriteLine("Account removed.");
+                            }
                     }
                     else
                     {
@@ -242,12 +269,15 @@ namespace TWW
                     break;
             }
         }
-        private static void manageProducts()
+
+
+
+        private static async void manageProducts()
         {
             Console.WriteLine($"Products Manager");
             Console.WriteLine("---------------");
 
-            string manage = Prompt.Select("Select your option", new[] { "Create New Product", "View Produts", "Delete Products" });
+            string manage = Prompt.Select("Select your option", new[] { "Create New Product", "View Produts", "Delete Products" });//lets the user chose an option
 
             switch (manage)
             {
@@ -255,8 +285,13 @@ namespace TWW
 
                     Console.Clear();
 
-                    string name = Prompt.Input<string>("Enter Product Name:");
-                    Products Product = new Products(name);
+                    string name = Prompt.Input<string>("Enter Product Name:");//gathers data to add to the product
+                    string type = Prompt.Input<string>("Enter Product Type:");
+                    Products Product = new Products(name, type);
+
+                        StreamWriter productFile = new("Products.txt", append: true);
+                        await productFile.WriteLineAsync($"{name}, {type}");//adds account details to Account.txt
+
                     Console.WriteLine($"Product Registered: \n {Product} ");
 
                     Console.WriteLine("Prease any key to return to main menu.");
@@ -266,7 +301,7 @@ namespace TWW
 
                 case "View Product":
                     Console.Clear();
-                    foreach (var item in library.Products)
+                    foreach (var item in library.Products)//loops through displaying each product
                     {
                         Console.WriteLine(item);
                         Console.WriteLine("--------------------");
@@ -278,13 +313,28 @@ namespace TWW
 
                 case "Delete Product":
                     Console.Clear();
-                    string ProductName = Prompt.Input<string>("Enter Product Name:");
+                    string ProductName = Prompt.Input<string>("Enter Product Name:");//Gathers and identifies the chosen product
                     Products? current = library.GetProduct(ProductName);
 
                     if (current != null)
                     {
+                        Console.WriteLine(current.ToString());
+                        string? currentString = current.ToString();
+                        Console.WriteLine("------------------------------------------------------------------------");
+                        var sure = Prompt.Confirm("Are you sure that you would like to delete this Product?:");//confirms the deletion
+                        if (sure == true) 
+                        {
+                        var tempFile = Path.GetTempFileName();
+                        var linesToKeep = File.ReadLines("Products.txt").Where(i => i != currentString);//removes loan from txt file
+
+                        File.WriteAllLines(tempFile, linesToKeep);
+
+                        File.Delete("Products.txt");
+                        File.Move(tempFile, "Products.txt");
                         library.Products.Remove(current);
+
                         Console.WriteLine("Product removed.");
+                            }
                     }
                     else
                     {

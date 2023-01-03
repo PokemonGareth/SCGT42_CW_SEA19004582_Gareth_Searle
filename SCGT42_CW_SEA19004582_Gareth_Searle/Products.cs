@@ -11,16 +11,18 @@ namespace TWW
         public Guid Id { get; set; }
         public string Name { get; set; }
         public bool Status { get; set; }
-        public Products(string name)
+        public string Type { get; set; }
+        public Products(string name, string type)
         {
             Id = Guid.NewGuid();
             Name = name;
             Status = true;
+            Type = type;
         }
 
         public override string? ToString()
         {
-            return $"Product ID: {Id}\nProduct Name: {Name}\nAvailibility: {Status}";
+            return $"Product ID: {Id}\nProduct Name: {Name}\nProduct Type:{Type}\nAvailibility: {Status}";
         }
     }
 }
