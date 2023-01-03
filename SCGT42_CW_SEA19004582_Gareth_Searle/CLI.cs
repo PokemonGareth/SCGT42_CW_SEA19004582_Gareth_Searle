@@ -16,6 +16,7 @@ namespace TWW
         public static Library? library { get; set; }//gets the contents of Library and stores it into a local variable
         public static void MainMenu()
         {
+            library = new Library("The Word Wagon", "1 Taunton rd");
             Console.Clear();
             Console.WriteLine($"Welcome to The Word Wagon!");
             Console.WriteLine("--------------------------------");
@@ -60,7 +61,7 @@ namespace TWW
 
                     if (currentProduct != null && currentProduct.Status == true)//checks whether the user input was not empty and the product is available
                     {
-
+                        string Id = Prompt.Input<string>("Enter Id:");
                         Account Name = Prompt.Input<Account>("Enter Loanee's Account Name:");//gathers the data to create a new loan
                         Console.WriteLine("Now Please enter the return date:");
                         int d = Prompt.Input<int>("Enter day:");
@@ -68,7 +69,7 @@ namespace TWW
                         int y = Prompt.Input<int>("Enter year:");
                         int h = Prompt.Input<int>("Enter hour:");
                         int m = Prompt.Input<int>("Enter mins:");
-                        Loans Loan = new Loans(currentProduct, Name, new DateTime(y, M, d, h, m, 0));//creates a new loan
+                        Loans Loan = new Loans(Id, currentProduct, Name, new DateTime(y, M, d, h, m, 0));//creates a new loan
 
                         currentProduct.Status = false;//changes the product status
 
@@ -77,7 +78,7 @@ namespace TWW
 
                         Console.WriteLine($"Loan added: \n {Loan} ");
                     }
-                    else if(currentProduct.Status != true)
+                    else if (currentProduct.Status != true)
                     {
                         Console.WriteLine("Product already Loaned");//displays that the product is already bieng loaned
                     }
@@ -111,6 +112,7 @@ namespace TWW
                     if (edit != null)
                     {
                         string editString = edit.ToString(); //converts data type to string
+                        var oldId = edit.Id;
                         var oldProduct = edit.Product;//stores all other data from the loan bieng edited
                         var oldAccount = edit.Account;
 
@@ -127,8 +129,8 @@ namespace TWW
                         int newDay = Prompt.Input<int>("Please enter new Due Day");
                         int newHour = Prompt.Input<int>("Please enter new Due Hour");
                         int newMinute = Prompt.Input<int>("Please enter new Due Minute");
-                        Loans editedLoan = new Loans(oldProduct, oldAccount, new DateTime(newYear, newMonth, newDay, newHour, newMinute, 0));//modifies the time and date of the loan
-                
+                        Loans editedLoan = new Loans(oldId, oldProduct, oldAccount, new DateTime(newYear, newMonth, newDay, newHour, newMinute, 0));//modifies the time and date of the loan
+
                         using StreamWriter loanFile = new("Loans.txt", append: true);
                         await loanFile.WriteLineAsync($"{oldProduct}, {oldAccount}, {new DateTime(newYear, newMonth, newDay, newHour, newMinute, 0)}");//appends the loan to a loans text file
 
@@ -154,22 +156,22 @@ namespace TWW
                         string currentString = current.ToString();
                         Console.WriteLine("------------------------------------------------------------------------");
                         var sure = Prompt.Confirm("Are you sure that you would like to delete this loan?:");//confirms the deletion
-                        if (sure == true) 
+                        if (sure == true)
                         {
-                        current.Product.Status = true;//makes the product available again
+                            current.Product.Status = true;//makes the product available again
 
-                        var tempFile = Path.GetTempFileName();
-                        var linesToKeep = File.ReadLines("Loans.txt").Where(i => i != currentString);//removes loan from txt file
+                            var tempFile = Path.GetTempFileName();
+                            var linesToKeep = File.ReadLines("Loans.txt").Where(i => i != currentString);//removes loan from txt file
 
-                        File.WriteAllLines(tempFile, linesToKeep);
+                            File.WriteAllLines(tempFile, linesToKeep);
 
-                        File.Delete("Loans.txt");
-                        File.Move(tempFile, "Loans.txt");
+                            File.Delete("Loans.txt");
+                            File.Move(tempFile, "Loans.txt");
 
-                        library.Loans.Remove(current);//removes loan
+                            library.Loans.Remove(current);//removes loan
 
-                        Console.WriteLine("Loan terminated.");
-                    }
+                            Console.WriteLine("Loan terminated.");
+                        }
 
                     }
                     else
@@ -202,11 +204,11 @@ namespace TWW
 
                     Console.Clear();//clears console
 
-
+                    string Id = Prompt.Input<string>("Enter Id:");
                     string name = Prompt.Input<string>("Enter Account Name:");//gathers data to create a new account
                     string email = Prompt.Input<string>("Enter Account Email:");
                     string address = Prompt.Input<string>("Enter Account Address:");
-                    Account account = new Account(name, email, address);//creates new account
+                    Account account = new Account(Id, name, email, address);//creates new account
 
                     StreamWriter accountFile = new StreamWriter("Accounts.txt", append: true);
                     await accountFile.WriteLineAsync($"{name}, {email}, {address}");//adds account details to Account.txt
@@ -220,11 +222,21 @@ namespace TWW
 
                 case "View Accounts":
                     Console.Clear();//clears console
-                    foreach (var item in library.Accounts)//loops through Accounts displaying each of them
+
+                    if (library != null)
                     {
-                        Console.WriteLine(item);
-                        Console.WriteLine("--------------------");
+
+                        foreach (var item in library.Accounts)//loops through Accounts displaying each of them
+                        {
+                            Console.WriteLine(item);
+                            Console.WriteLine("--------------------");
+                        }
                     }
+                    else
+                    {
+                        Console.WriteLine("No Accounts found");
+                    }
+
                     Console.WriteLine("Prease any key to return to main menu.");
                     Console.ReadLine();
                     MainMenu();
@@ -241,19 +253,19 @@ namespace TWW
                         string? currentString = current.ToString();
                         Console.WriteLine("------------------------------------------------------------------------");
                         var sure = Prompt.Confirm("Are you sure that you would like to delete this Account?:");//confirms the deletion
-                        if (sure == true) 
+                        if (sure == true)
                         {
-                        var tempFile = Path.GetTempFileName();
-                        var linesToKeep = File.ReadLines("Accounts.txt").Where(i => i != currentString);//removes account from txt file
+                            var tempFile = Path.GetTempFileName();
+                            var linesToKeep = File.ReadLines("Accounts.txt").Where(i => i != currentString);//removes account from txt file
 
-                        File.WriteAllLines(tempFile, linesToKeep);
+                            File.WriteAllLines(tempFile, linesToKeep);
 
-                        File.Delete("Accounts.txt");
-                        File.Move(tempFile, "Accounts.txt");
+                            File.Delete("Accounts.txt");
+                            File.Move(tempFile, "Accounts.txt");
 
-                        library.Accounts.Remove(current);//removes account
-                        Console.WriteLine("Account removed.");
-                            }
+                            library.Accounts.Remove(current);//removes account
+                            Console.WriteLine("Account removed.");
+                        }
                     }
                     else
                     {
@@ -285,12 +297,13 @@ namespace TWW
 
                     Console.Clear();
 
+                    string Id = Prompt.Input<string>("Enter Id:");
                     string name = Prompt.Input<string>("Enter Product Name:");//gathers data to add to the product
                     string type = Prompt.Input<string>("Enter Product Type:");
-                    Products Product = new Products(name, type);
+                    Products Product = new Products(Id, name, type);
 
-                        StreamWriter productFile = new("Products.txt", append: true);
-                        await productFile.WriteLineAsync($"{name}, {type}");//adds account details to Account.txt
+                    StreamWriter productFile = new("Products.txt", append: true);
+                    await productFile.WriteLineAsync($"{name}, {type}");//adds account details to Account.txt
 
                     Console.WriteLine($"Product Registered: \n {Product} ");
 
@@ -322,19 +335,19 @@ namespace TWW
                         string? currentString = current.ToString();
                         Console.WriteLine("------------------------------------------------------------------------");
                         var sure = Prompt.Confirm("Are you sure that you would like to delete this Product?:");//confirms the deletion
-                        if (sure == true) 
+                        if (sure == true)
                         {
-                        var tempFile = Path.GetTempFileName();
-                        var linesToKeep = File.ReadLines("Products.txt").Where(i => i != currentString);//removes loan from txt file
+                            var tempFile = Path.GetTempFileName();
+                            var linesToKeep = File.ReadLines("Products.txt").Where(i => i != currentString);//removes loan from txt file
 
-                        File.WriteAllLines(tempFile, linesToKeep);
+                            File.WriteAllLines(tempFile, linesToKeep);
 
-                        File.Delete("Products.txt");
-                        File.Move(tempFile, "Products.txt");
-                        library.Products.Remove(current);
+                            File.Delete("Products.txt");
+                            File.Move(tempFile, "Products.txt");
+                            library.Products.Remove(current);
 
-                        Console.WriteLine("Product removed.");
-                            }
+                            Console.WriteLine("Product removed.");
+                        }
                     }
                     else
                     {

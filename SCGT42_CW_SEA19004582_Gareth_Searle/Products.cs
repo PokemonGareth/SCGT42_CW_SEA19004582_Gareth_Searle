@@ -8,13 +8,13 @@ namespace TWW
 {
     internal class Products //used for creating products
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public bool Status { get; set; }
         public string Type { get; set; }
-        public Products(string name, string type)
+        public Products(string id, string name, string type)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             Name = name;
             Status = true;
             Type = type;

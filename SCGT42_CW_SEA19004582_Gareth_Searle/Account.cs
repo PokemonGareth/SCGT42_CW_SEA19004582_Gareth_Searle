@@ -8,16 +8,17 @@ namespace TWW
 {
     internal class Account // used to create an Account
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }
         public Account(
+            string id,
                       string name,
                       string email,
                       string address)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             Name = name;
             Email = email;
             Address = address;

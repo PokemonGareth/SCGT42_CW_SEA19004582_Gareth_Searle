@@ -8,14 +8,14 @@ namespace TWW
 {
     internal class Loans //used to create Loans
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public Products Product { get; set; }
         public Account Account { get; set; }
         public DateTime Timestamp { get; set; }
 
-        public Loans(Products product, Account account, DateTime timestamp)
+        public Loans(string id, Products product, Account account, DateTime timestamp)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             Product = product;
             Account = account;
             Timestamp = timestamp;
