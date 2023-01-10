@@ -26,7 +26,7 @@ namespace TWW
 
         public override string? ToString()
         {
-            return $"Account ID: { Id }\nDriver Name: {Name}\nEmail: { Email }\nAddress: {Address}";
+            return $"Account ID: {Id}\nName: {Name}\nEmail: {Email}\nAddress: {Address}";
         }
     }
 }
