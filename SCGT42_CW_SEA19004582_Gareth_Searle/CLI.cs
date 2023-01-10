@@ -61,30 +61,30 @@ namespace TWW
                 case "New Loan":
 
                     Console.Clear();//clears the console
-                    string Product = Prompt.Input<string>("Enter Product");
+                    string Product = Prompt.Input<string>("Enter Product Name");
                     Products? currentProduct = library.GetProduct(Product);//gets details of the product to be loaned
 
-                    if (currentProduct != null && currentProduct.Status == true)//checks whether the user input was not empty and the product is available
+                    if (currentProduct != null && currentProduct.Status == "true")//checks whether the user input was not empty and the product is available
                     {
                         string Id = Prompt.Input<string>("Enter Id");
-                        Account Name = Prompt.Input<Account>("Enter Loanee's Account Name");//gathers the data to create a new loan
+                        Account AccountID = Prompt.Input<Account>("Enter Loanee's Account ID");//gathers the data to create a new loan
                         Console.WriteLine("Now Please enter the return date");
                         int d = Prompt.Input<int>("Enter day");
                         int M = Prompt.Input<int>("Enter month");
                         int y = Prompt.Input<int>("Enter year");
                         int h = Prompt.Input<int>("Enter hour");
                         int m = Prompt.Input<int>("Enter mins");
-                        Loans Loan = new Loans(Id, currentProduct, Name, new DateTime(y, M, d, h, m, 00));//creates a new loan
+                        Loans Loan = new Loans(Id, currentProduct, AccountID, new DateTime(y, M, d, h, m, 00));//creates a new loan
 
-                        currentProduct.Status = false;//changes the product status
+                        currentProduct.Status = "false";//changes the product status
 
                         var loanFile = new StreamWriter("Loans.txt", append: true);
-                        loanFile.WriteLineAsync($"{currentProduct}, {Name}, {new DateTime(y, M, d, h, m, 0)}");//appends the loan to a loans text file
+                        loanFile.WriteLineAsync($"{currentProduct}, {AccountID}, {new DateTime(y, M, d, h, m, 0)}");//appends the loan to a loans text file
                         loanFile.Close();
 
                         Console.WriteLine($"Loan added: \n {Loan} ");
                     }
-                    else if (currentProduct.Status != true)
+                    else if (currentProduct.Status != "true")
                     {
                         Console.WriteLine("Product already Loaned");//displays that the product is already bieng loaned
                     }
@@ -165,7 +165,7 @@ namespace TWW
                         var sure = Prompt.Confirm("Are you sure that you would like to delete this loan?");//confirms the deletion
                         if (sure == true)
                         {
-                            current.Product.Status = true;//makes the product available again
+                            current.Product.Status = "true";//makes the product available again
 
                             var tempFile = Path.GetTempFileName();
                             var linesToKeep = File.ReadLines("Loans.txt").Where(i => i != currentString);//removes loan from txt file
@@ -311,7 +311,7 @@ namespace TWW
                     Products Product = new Products(Id, name, type);
 
                     var productFile = new StreamWriter("Products.txt", append: true);
-                    productFile.WriteLineAsync($"{Id}, {name}, {type} {type}");//adds account details to Account.txt
+                    productFile.WriteLineAsync($"{Id}, {name}, {type} {type}");//adds account details to Products.txt
                     productFile.Close();
 
                     Console.WriteLine($"Product Registered: \n {Product} ");

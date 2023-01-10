@@ -7,6 +7,8 @@ namespace TWW
     {
         static void Main()
         {
+            Library library = new Library("The Word Wagon", "1 Taunton rd");
+
             string[] readAccounts = File.ReadAllLines(@"Accounts.txt");
             List<Account> Accountlist = new List<Account>();
             foreach (string readaccount in readAccounts)
@@ -31,29 +33,26 @@ namespace TWW
                 string[] loanitems = readLoan.Split('\u002C');
 
                 DateTime DT = DateTime.Parse(loanitems[3]);
-                List<string> Product = new List<string>();
-                List<string> User = new List<string>();
 
-
-                foreach (var productID in Productlist)
+                foreach (var productname in Productlist)
                 {
-                    if (productID == loanitems[2])
+                    if (productname.Name == loanitems[1])
                     {
-                        Product.AddRange(productID);
+                        var productdetails = Library.GetProduct(productname);
                     }
                 }
 
                 foreach (var username in Accountlist)
                 {
-                    if (username == loanitems[3])
+                    if (username.Name == loanitems[2])
                     {
-                        User.AddRange(username);
+                        var accountdetails = Library.GetAccount(username);
                     }
                 }
 
-                Loans loan = new Loans(loanitems[0], Product, User, DT);
+                Loans loan = new Loans(loanitems[0], productdetails, accountdetails, DT);
             }
-            Library library = new Library("The Word Wagon", "1 Taunton rd");
+
             CLI.MainMenu();//displays the main menu from CLI.cs
         }
     }

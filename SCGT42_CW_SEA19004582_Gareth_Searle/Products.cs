@@ -10,13 +10,13 @@ namespace TWW
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public bool Status { get; set; }
+        public string Status { get; set; }
         public string Type { get; set; }
         public Products(string id, string name, string type)
         {
             Id = id;
             Name = name;
-            Status = true;
+            Status = "true";
             Type = type;
         }
 
