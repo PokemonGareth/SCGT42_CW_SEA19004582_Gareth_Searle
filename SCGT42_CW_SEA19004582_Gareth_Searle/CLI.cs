@@ -21,7 +21,7 @@ namespace TWW
             Console.WriteLine($"Welcome to The Word Wagon!");
             Console.WriteLine("--------------------------------");
 
-            string manage = Prompt.Select("Select your option", new[] { "Manage Accounts", "Manage Products", "Manage Loans" });//allows the user to choose an option
+            string manage = Prompt.Select("Select your option", new[] { "Manage Accounts", "Manage Products", "Manage Loans" , "View Overdue Loans"});//allows the user to choose an option
 
             switch (manage)//used to work out what the user wants to do
             {
@@ -36,6 +36,10 @@ namespace TWW
                 case "Manage Loans":
                     Console.Clear();
                     manageLoans();
+                    break;
+                case "View Overdue Loans":
+                    Console.Clear();
+                    overdueLoans();
                     break;
                 default:
                     break;
@@ -69,7 +73,7 @@ namespace TWW
                         int y = Prompt.Input<int>("Enter year:");
                         int h = Prompt.Input<int>("Enter hour:");
                         int m = Prompt.Input<int>("Enter mins:");
-                        Loans Loan = new Loans(Id, currentProduct, Name, new DateTime(y, M, d, h, m, 0));//creates a new loan
+                        Loans Loan = new Loans(Id, currentProduct, Name, new DateTime(y, M, d, h, m, 00));//creates a new loan
 
                         currentProduct.Status = false;//changes the product status
 
@@ -362,6 +366,28 @@ namespace TWW
                 default:
                     break;
             }
+        }
+
+        private static void overdueLoans()
+        {
+            Console.Clear();
+            int count = 0;
+            foreach (var item in library.Loans)//loops through the Loans
+            {
+                if (item.Timestamp < DateTime.Now)//cheks whether Loan is overdue
+                Console.WriteLine(item);
+                count++;
+                Console.WriteLine("--------------------");
+            }
+
+            if (count == 0)//checks whether there were any over due and if not then displays No Overdue Loans
+            {
+                Console.WriteLine("There are no Overdue Loans :)\n");
+                Console.WriteLine("-------------------------------------------\n");
+            }
+            Console.WriteLine("Prease any key to return to main menu.");
+            Console.ReadLine();
+            MainMenu();
         }
     }
 }
