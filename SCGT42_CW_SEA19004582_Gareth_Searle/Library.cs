@@ -37,6 +37,7 @@ namespace TWW
             return null;
 
         }
+
         public Loans? GetLoan(string id)//used when retrieing a loan
         {
             foreach (var loan in Loans)

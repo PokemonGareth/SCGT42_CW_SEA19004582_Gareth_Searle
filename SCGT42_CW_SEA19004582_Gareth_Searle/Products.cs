@@ -12,11 +12,11 @@ namespace TWW
         public string Name { get; set; }
         public string Status { get; set; }
         public string Type { get; set; }
-        public Products(string id, string name, string type)
+        public Products(string id, string name, string status, string type)
         {
             Id = id;
             Name = name;
-            Status = "true";
+            Status = status;
             Type = type;
         }
 

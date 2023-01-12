@@ -61,7 +61,7 @@ namespace TWW
                 case "New Loan":
 
                     Console.Clear();//clears the console
-                    string Product = Prompt.Input<string>("Enter Product Name");
+                    string Product = Prompt.Input<string>("Enter Product ID");
                     Products? currentProduct = library.GetProduct(Product);//gets details of the product to be loaned
 
                     if (currentProduct != null && currentProduct.Status == "true")//checks whether the user input was not empty and the product is available
@@ -79,7 +79,7 @@ namespace TWW
                         currentProduct.Status = "false";//changes the product status
 
                         var loanFile = new StreamWriter("Loans.txt", append: true);
-                        loanFile.WriteLineAsync($"{currentProduct}, {AccountID}, {new DateTime(y, M, d, h, m, 0)}");//appends the loan to a loans text file
+                        loanFile.WriteLineAsync($"{currentProduct},{AccountID},{new DateTime(y, M, d, h, m, 0)}");//appends the loan to a loans text file
                         loanFile.Close();
 
                         Console.WriteLine($"Loan added: \n {Loan} ");
@@ -138,7 +138,7 @@ namespace TWW
                         Loans editedLoan = new Loans(oldId, oldProduct, oldAccount, new DateTime(newYear, newMonth, newDay, newHour, newMinute, 0));//modifies the time and date of the loan
 
                         var loanFile = new StreamWriter("Loans.txt", append: true);
-                        loanFile.WriteLineAsync($"{oldProduct}, {oldAccount}, {new DateTime(newYear, newMonth, newDay, newHour, newMinute, 0)}");//appends the loan to a loans text file
+                        loanFile.WriteLineAsync($"{oldProduct},{oldAccount},{new DateTime(newYear, newMonth, newDay, newHour, newMinute, 0)}");//appends the loan to a loans text file
                         loanFile.Close();
 
                         Console.WriteLine("Details have been updated.");
@@ -218,7 +218,7 @@ namespace TWW
                     Account account = new Account(Id, name, email, address);//creates new account
 
                     var accountFile = new StreamWriter("Accounts.txt", append: true);
-                    accountFile.WriteLine($"{Id}, {name}, {email}, {address}");//adds account details to Account.txt
+                    accountFile.WriteLine($"{Id},{name},{email},{address}");//adds account details to Account.txt
                     accountFile.Close();
 
                     Console.WriteLine($"Account Creation Complete:\n{account} ");
@@ -308,10 +308,10 @@ namespace TWW
                     string Id = Prompt.Input<string>("Enter Id");
                     string name = Prompt.Input<string>("Enter Product Name");//gathers data to add to the product
                     string type = Prompt.Input<string>("Enter Product Type");
-                    Products Product = new Products(Id, name, type);
+                    Products Product = new Products(Id, name, "True", type);
 
                     var productFile = new StreamWriter("Products.txt", append: true);
-                    productFile.WriteLineAsync($"{Id}, {name}, {type} {type}");//adds account details to Products.txt
+                    productFile.WriteLineAsync($"{Id},{name},'True',{type}");//adds account details to Products.txt
                     productFile.Close();
 
                     Console.WriteLine($"Product Registered: \n {Product} ");
