@@ -49,7 +49,7 @@ namespace TWW
 
 
 
-        private static async void manageLoans()
+        private static void manageLoans()
         {
             Console.WriteLine($"Loans Manager");
             Console.WriteLine("---------------");
@@ -198,7 +198,7 @@ namespace TWW
 
 
 
-        private static async void manageAccounts()
+        private static void manageAccounts()
         {
             Console.WriteLine($"Account Manager");
             Console.WriteLine("---------------");
@@ -292,7 +292,7 @@ namespace TWW
 
 
 
-        private static async void manageProducts()
+        private static void manageProducts()
         {
             Console.WriteLine($"Products Manager");
             Console.WriteLine("---------------");
