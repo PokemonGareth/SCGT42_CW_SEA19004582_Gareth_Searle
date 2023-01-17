@@ -24,11 +24,11 @@ namespace TWW
             Products = new List<Products>();
         }
 
-        public Account? GetAccount(string name)//used when retrieing an account
+        public Account? GetAccount(string id)//used when retrieing an account
         {
             foreach (var account in Accounts)
             {
-                if (account.Name == name)
+                if (account.Id == id)
                 {
                     return account;
 
@@ -51,11 +51,11 @@ namespace TWW
             return null;
 
         }
-        public Products? GetProduct(string name)//used when retrieing a product
+        public Products? GetProduct(string Id)//used when retrieing a product
         {
             foreach (var product in Products)
             {
-                if (product.Name == name)
+                if (product.Id == Id)
                 {
                     return product;
 

@@ -49,7 +49,7 @@ namespace TWW
 
 
 
-        private static async void manageLoans()
+        private static void manageLoans()
         {
             Console.WriteLine($"Loans Manager");
             Console.WriteLine("---------------");
@@ -67,7 +67,8 @@ namespace TWW
                     if (currentProduct != null && currentProduct.Status == "true")//checks whether the user input was not empty and the product is available
                     {
                         string Id = Prompt.Input<string>("Enter Id");
-                        Account AccountID = Prompt.Input<Account>("Enter Loanee's Account ID");//gathers the data to create a new loan
+                        string AccountIDstr = Prompt.Input<string>("Enter Loanee's Account ID");//gathers the data to create a new loan
+                        Account? AccountID = library.GetAccount(AccountIDstr);
                         Console.WriteLine("Now Please enter the return date");
                         int d = Prompt.Input<int>("Enter day");
                         int M = Prompt.Input<int>("Enter month");
@@ -79,12 +80,12 @@ namespace TWW
                         currentProduct.Status = "false";//changes the product status
 
                         var loanFile = new StreamWriter("Loans.txt", append: true);
-                        loanFile.WriteLineAsync($"{currentProduct},{AccountID},{new DateTime(y, M, d, h, m, 0)}");//appends the loan to a loans text file
+                        loanFile.WriteLineAsync($"{Id},{currentProduct.Id},{AccountID.Id},{new DateTime(y, M, d, h, m, 0)}");//appends the loan to a loans text file
                         loanFile.Close();
 
                         Console.WriteLine($"Loan added: \n {Loan} ");
                     }
-                    else if (currentProduct.Status != "true")
+                    else if (currentProduct != null && currentProduct.Status != "true")
                     {
                         Console.WriteLine("Product already Loaned");//displays that the product is already bieng loaned
                     }
@@ -100,10 +101,17 @@ namespace TWW
 
                 case "View Loans":
                     Console.Clear();
-                    foreach (var item in library.Loans)//loops through the Loans displaying each one
+                    if (library.Loans.Count != 0)
                     {
-                        Console.WriteLine(item);
-                        Console.WriteLine("--------------------");
+                        foreach (Loans loa in library.Loans)//loops through the Loans displaying each one
+                        {
+                            Console.WriteLine(loa);
+                            Console.WriteLine("--------------------");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No loans Found");
                     }
                     Console.WriteLine("Prease any key to return to main menu.");
                     Console.ReadLine();
@@ -196,9 +204,7 @@ namespace TWW
             }
         }
 
-
-
-        private static async void manageAccounts()
+        private static void manageAccounts()
         {
             Console.WriteLine($"Account Manager");
             Console.WriteLine("---------------");
@@ -214,6 +220,16 @@ namespace TWW
                     string Id = Prompt.Input<string>("Enter Id");
                     string name = Prompt.Input<string>("Enter Account Name");//gathers data to create a new account
                     string email = Prompt.Input<string>("Enter Account Email");
+                    bool Loop = true;
+                    if (email.Contains('@') && email.Contains('.')){
+                        Loop = false;
+                    }
+                    while (Loop == true){
+                        email = Prompt.Input<string>("Must be email:");
+                        if (email.Contains('@') && email.Contains('.')){
+                            Loop = false;
+                        }
+                    }
                     string address = Prompt.Input<string>("Enter Account Address");
                     Account account = new Account(Id, name, email, address);//creates new account
 
@@ -229,14 +245,15 @@ namespace TWW
                     break;
 
                 case "View Accounts":
+
                     Console.Clear();//clears console
 
-                    if (library != null)
+                    if (library.Accounts.Count() != 0)
                     {
 
-                        foreach (var item in library.Accounts)//loops through Accounts displaying each of them
+                        foreach (Account acc in library.Accounts)
                         {
-                            Console.WriteLine(item);
+                            Console.WriteLine(acc);
                             Console.WriteLine("--------------------");
                         }
                     }
@@ -263,6 +280,7 @@ namespace TWW
                         var sure = Prompt.Confirm("Are you sure that you would like to delete this Account?");//confirms the deletion
                         if (sure == true)
                         {
+
                             var tempFile = Path.GetTempFileName();
                             var linesToKeep = File.ReadLines("Accounts.txt").Where(i => i != currentString);//removes account from txt file
 
@@ -290,14 +308,12 @@ namespace TWW
             }
         }
 
-
-
-        private static async void manageProducts()
+        private static void manageProducts()
         {
             Console.WriteLine($"Products Manager");
             Console.WriteLine("---------------");
 
-            string manage = Prompt.Select("Select your option", new[] { "Create New Product", "View Produts", "Delete Products" });//lets the user chose an option
+            string manage = Prompt.Select("Select your option", new[] { "Create New Product", "View Products", "Delete Products" });//lets the user chose an option
 
             switch (manage)
             {
@@ -308,10 +324,10 @@ namespace TWW
                     string Id = Prompt.Input<string>("Enter Id");
                     string name = Prompt.Input<string>("Enter Product Name");//gathers data to add to the product
                     string type = Prompt.Input<string>("Enter Product Type");
-                    Products Product = new Products(Id, name, "True", type);
+                    Products Product = new Products(Id, name, "true", type);
 
                     var productFile = new StreamWriter("Products.txt", append: true);
-                    productFile.WriteLineAsync($"{Id},{name},'True',{type}");//adds account details to Products.txt
+                    productFile.WriteLineAsync($"{Id},{name},'true',{type}");//adds account details to Products.txt
                     productFile.Close();
 
                     Console.WriteLine($"Product Registered: \n {Product} ");
@@ -323,10 +339,13 @@ namespace TWW
 
                 case "View Products":
                     Console.Clear();
-                    foreach (var item in library.Products)//loops through displaying each product
+                    if (library.Products.Count() != 0)
                     {
-                        Console.WriteLine(item);
-                        Console.WriteLine("--------------------");
+                        foreach (Products prod in library.Products)//loops through displaying each product
+                        {
+                            Console.WriteLine(prod);
+                            Console.WriteLine("--------------------");
+                        }
                     }
                     Console.WriteLine("Prease any key to return to main menu.");
                     Console.ReadLine();

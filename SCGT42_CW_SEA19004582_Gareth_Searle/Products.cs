@@ -22,7 +22,7 @@ namespace TWW
 
         public override string? ToString()
         {
-            return $"Product ID: {Id}\nProduct Name: {Name}\nProduct Type:{Type}\nAvailibility: {Status}";
+            return $"Product ID: {Id}\nProduct Name: {Name}\nAvailability: {Status}\nProduct Type: {Type}";
         }
     }
 }

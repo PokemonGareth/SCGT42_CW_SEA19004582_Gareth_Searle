@@ -10,35 +10,33 @@ namespace TWW
             Library library = new Library("The Word Wagon", "1 Taunton rd");
 
             string[] readAccounts = File.ReadAllLines(@"Accounts.txt");
-            List<Account> Accountlist = new List<Account>();
-            foreach (string readaccount in readAccounts)
+            foreach (string line in readAccounts)
             {
-                if (readaccount != null)
+                if (line != "")
                 {
-                    string[] accountitems = readaccount.Split('\u002C');
+                    string[] accountitems = line.Split('\u002C');
                     Account account = new Account(accountitems[0], accountitems[1], accountitems[2], accountitems[3]);
-                    Accountlist.Add(account);
+                    library.Accounts.Add(account);
                 }
             }
 
             string[] readProducts = File.ReadAllLines("Products.txt");
-            List<Products> Productlist = new List<Products>();
-            foreach (string readproduct in readProducts)
+            foreach (string line in readProducts)
             {
-                if (readProducts != null)
+                if (line != "")
                 {
-                    string[] productitems = readproduct.Split('\u002C');
+                    string[] productitems = line.Split('\u002C');
                     Products product = new Products(productitems[0], productitems[1], productitems[2], productitems[3]);
-                    Productlist.Add(product);
+                    library.Products.Add(product);
                 }
             }
 
             string[] readLoans = File.ReadAllLines("Loans.txt");
-            foreach (string readLoan in readLoans)
+            foreach (string line in readLoans)
             {
-                if (readLoan != null)
+                if (line != "")
                 {
-                    string[] loanitems = readLoan.Split('\u002C');
+                    string[] loanitems = line.Split('\u002C');
 
                     DateTime DT = DateTime.Parse(loanitems[3]);
 
@@ -47,9 +45,10 @@ namespace TWW
 
 
                     Loans loan = new Loans(loanitems[0], productdetails, accountdetails, DT);
+                    library.Loans.Add(loan);
                 }
             }
-
+            CLI.library = library;
             CLI.MainMenu();//displays the main menu from CLI.cs
         }
     }
