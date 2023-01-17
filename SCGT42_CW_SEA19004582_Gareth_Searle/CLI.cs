@@ -162,38 +162,38 @@ namespace TWW
 
                 case "Delete Loan":
                     Console.Clear();
-                    string loanID = Prompt.Input<string>("Enter Loan number");
-                    Loans? current = library.GetLoan(loanID);//locates chosen loan
+                    string loanid = Prompt.Input<string>("Enter loan ID");
+                    Loans? current = library.GetLoan(loanid);//locates loan
 
                     if (current != null)
                     {
-                        Console.WriteLine(current.ToString());//displays the chosen loan
-                        string currentString = current.ToString();
+                        Console.WriteLine(current.ToString());
+                        string? currentString = current.ToString();
                         Console.WriteLine("------------------------------------------------------------------------");
-                        var sure = Prompt.Confirm("Are you sure that you would like to delete this loan?");//confirms the deletion
+                        var sure = Prompt.Confirm("Are you sure that you would like to delete this Loan?");//confirms the deletion
                         if (sure == true)
                         {
-                            current.Product.Status = "true";//makes the product available again
 
-                            var tempFile = Path.GetTempFileName();
-                            var linesToKeep = File.ReadLines("Loans.txt").Where(i => i != currentString);//removes loan from txt file
+                            library.Loans.Remove(current);//removes loan from library
 
-                            File.WriteAllLines(tempFile, linesToKeep);
+                            var file = new StreamWriter("Loans.txt", append: false);
 
-                            File.Delete("Loans.txt");
-                            File.Move(tempFile, "Loans.txt");
+                            foreach (Loans Loa in library.Loans)
+                            {
 
-                            library.Loans.Remove(current);//removes loan
+                                file.WriteLine($"{Loa.Id},{Loa.Product},{Loa.Account},{Loa.Timestamp}");//adds all account details to loan.txt
 
-                            Console.WriteLine("Loan terminated.");
+                            }
+
+                            file.Close();
+
+                            Console.WriteLine("Loan removed.");
                         }
-
                     }
                     else
                     {
-                        Console.WriteLine("Loan reference not found.");//displays whether the ID could be found
+                        Console.WriteLine("Loan not found.");
                     }
-
                     Console.WriteLine("Prease any key to return to main menu.");
                     Console.ReadLine();
                     MainMenu();
@@ -281,15 +281,19 @@ namespace TWW
                         if (sure == true)
                         {
 
-                            var tempFile = Path.GetTempFileName();
-                            var linesToKeep = File.ReadLines("Accounts.txt").Where(i => i != currentString);//removes account from txt file
+                            library.Accounts.Remove(current);//removes account from library
 
-                            File.WriteAllLines(tempFile, linesToKeep);
+                            var file = new StreamWriter("Accounts.txt", append: false);  
 
-                            File.Delete("Accounts.txt");
-                            File.Move(tempFile, "Accounts.txt");
+                            foreach (Account acc in library.Accounts)
+                            {
 
-                            library.Accounts.Remove(current);//removes account
+                                file.WriteLine($"{acc.Id},{acc.Name},{acc.Email},{acc.Address}");//adds account details to Account.txt
+                          
+                            }
+                            
+                            file.Close();
+                          
                             Console.WriteLine("Account removed.");
                         }
                     }
@@ -300,7 +304,7 @@ namespace TWW
 
                     Console.WriteLine("Prease any key to return to main menu.");
                     Console.ReadLine();
-                    MainMenu();
+                    MainMenu();   
                     break;
 
                 default:
@@ -354,8 +358,8 @@ namespace TWW
 
                 case "Delete Products":
                     Console.Clear();
-                    string ProductName = Prompt.Input<string>("Enter Product Name");//Gathers and identifies the chosen product
-                    Products? current = library.GetProduct(ProductName);
+                    string Productid = Prompt.Input<string>("Enter product ID");
+                    Products? current = library.GetProduct(Productid);//locates loan
 
                     if (current != null)
                     {
@@ -365,14 +369,19 @@ namespace TWW
                         var sure = Prompt.Confirm("Are you sure that you would like to delete this Product?");//confirms the deletion
                         if (sure == true)
                         {
-                            var tempFile = Path.GetTempFileName();
-                            var linesToKeep = File.ReadLines("Products.txt").Where(i => i != currentString);//removes loan from txt file
 
-                            File.WriteAllLines(tempFile, linesToKeep);
+                            library.Products.Remove(current);//removes loan from library
 
-                            File.Delete("Products.txt");
-                            File.Move(tempFile, "Products.txt");
-                            library.Products.Remove(current);
+                            var file = new StreamWriter("Products.txt", append: false);
+
+                            foreach (Products pro in library.Products)
+                            {
+
+                                file.WriteLine($"{pro.Id},{pro.Name},{pro.Status},{pro.Type}");//adds all account details to loan.txt
+
+                            }
+
+                            file.Close();
 
                             Console.WriteLine("Product removed.");
                         }
@@ -381,7 +390,6 @@ namespace TWW
                     {
                         Console.WriteLine("Product not found.");
                     }
-
                     Console.WriteLine("Prease any key to return to main menu.");
                     Console.ReadLine();
                     MainMenu();
